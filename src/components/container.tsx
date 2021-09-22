@@ -114,12 +114,12 @@ export default function PermanentDrawerLeft({
   const classes = useStyles({ backgroundColor });
   let idCounter = 0;
   const defaultPhotoCanvasLayout = { i: "a", x: 0, y: 0, w: 4, h: 7 };
-  const [photoImageSource,setPhotoImageSource] = useState(
-    "https://webdevts.blob.core.windows.net/9dc0ac99-d919-4124-a6f7-1a703ed645b2/4bbd833a-0bb8-482f-b08a-a53f15a0dab6636935342121491070-4.jpg"
-  );
+  const [photoImageSource,setPhotoImageSource] = useState("");
   const [photoCanvasLayout, setPhotoCanvasLayout] = useState([
     defaultPhotoCanvasLayout,
   ]);
+
+  const [showPhoto, setShowPhoto] = useState(false);
 
   const getId = () => {
     idCounter++;
@@ -204,10 +204,12 @@ export default function PermanentDrawerLeft({
       reader.onload = () => {
         const base64String = reader.result;
         setPhotoImageSource(base64String as string);
+        setShowPhoto(true);
       };
       reader.readAsDataURL(image);
     } else {
       setPhotoImageSource("");
+      setShowPhoto(false);
     }
   }, [image]);
 
@@ -298,7 +300,7 @@ export default function PermanentDrawerLeft({
             preventCollision={false}
             isDraggable={true}
             isResizable={true}
-            onLayoutChange={(layout) => photoLayoutChange(layout)}
+            onLayoutChange={(layout) => mainLayOutChange(layout)}
           >
             <div key='1' className={classes.interactiveItems}>
                 ghjhj
@@ -310,6 +312,7 @@ export default function PermanentDrawerLeft({
               isReadOnly={false}
               canvasLayout={photoCanvasLayout}
               updateLayout={setPhotoCanvasLayout}
+              showPhoto={showPhoto}
             />
               </div>
               </div>

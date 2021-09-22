@@ -8,6 +8,7 @@ interface IProps {
   canvasLayout: Layout[];
   imageSource: string;
   updateLayout: (layout: Layout[]) => void;
+  showPhoto: boolean;
 }
 
 export function PhotoCanvas({
@@ -15,6 +16,7 @@ export function PhotoCanvas({
   updateLayout,
   imageSource,
   isReadOnly,
+  showPhoto,
 }: IProps) {
   const makeLayoutStatic = (propsLayout: Layout[]): Layout[] => {
     return propsLayout.map<Layout>((x) => {
@@ -35,7 +37,7 @@ export function PhotoCanvas({
     updateLayout(layout);
   };
 
-  return (
+  const renderItem = showPhoto ? (
     <GridLayout
       className="layout"
       layout={isReadOnly ? staticLayout : canvasLayout}
@@ -50,5 +52,7 @@ export function PhotoCanvas({
         <img alt="test img 1" src={imageSource} width="100%" height="100%" />
       </div>
     </GridLayout>
-  );
+  ) : null;
+
+  return renderItem;
 }
