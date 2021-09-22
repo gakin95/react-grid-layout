@@ -24,10 +24,12 @@ import MenuItem from "@material-ui/core/MenuItem";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import LinkIcon from "@material-ui/icons/Link";
 import Menu from "./menu/common";
-import FormDialog from "./modal/form";
-import { PhotoCanvas } from "./canvas/photo";
 import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
 import { SizeMe } from 'react-sizeme'
+import FormDialog from "./modal/form";
+import { PhotoCanvas } from "./canvas/photo";
+import { VideoCanvas } from "./canvas/video";
+
 
 export type ContainerProp = {
   backgroundColor: string;
@@ -117,11 +119,19 @@ export default function PermanentDrawerLeft({
   let idCounter = 0;
   const defaultPhotoCanvasLayout = { i: "a", x: 0, y: 0, w: 4, h: 7 };
   const [photoImageSource,setPhotoImageSource] = useState("");
+  const [videoUrlSource] = useState(
+    "https://www.youtube.com/watch?v=ysz5S6PUM-U"
+  );
   const [photoCanvasLayout, setPhotoCanvasLayout] = useState([
     defaultPhotoCanvasLayout,
   ]);
 
+  const [videoCanvasLayout, setVideoCanvasLayout] = useState([
+    defaultPhotoCanvasLayout,
+  ]);
+
   const [showPhoto, setShowPhoto] = useState(false);
+  const [showVideoCanvas, setShowVideoCanvas] = useState(false);
 
   const getId = () => {
     idCounter++;
@@ -303,7 +313,7 @@ export default function PermanentDrawerLeft({
             breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
            cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
             width={size.width?size.width:900}
-            rowHeight={15}
+            rowHeight={100}
             preventCollision={false}
             isDraggable={true}
             isResizable={true}
@@ -321,6 +331,15 @@ export default function PermanentDrawerLeft({
               canvasLayout={photoCanvasLayout}
               updateLayout={setPhotoCanvasLayout}
               showPhoto={showPhoto}
+            />
+              </div>
+              <div>
+              <VideoCanvas
+              videoSource={videoUrlSource}
+              isReadOnly={false}
+              canvasLayout={videoCanvasLayout}
+              updateLayout={setVideoCanvasLayout}
+              showVideoCanvas={showVideoCanvas}
             />
               </div>
               </div>

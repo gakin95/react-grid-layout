@@ -8,6 +8,7 @@ interface IProps {
   isReadOnly: boolean;
   canvasLayout: Layout[];
   videoSource: string;
+  showVideoCanvas: boolean;
   updateLayout: (layout: Layout[]) => void;
 }
 
@@ -16,6 +17,7 @@ export function VideoCanvas({
   updateLayout,
   videoSource,
   isReadOnly,
+  showVideoCanvas,
 }: IProps) {
   const makeLayoutStatic = (propsLayout: Layout[]): Layout[] => {
     return propsLayout.map<Layout>((x) => {
@@ -36,7 +38,7 @@ export function VideoCanvas({
     updateLayout(layout);
   };
 
-  return (
+  const renderVideo = showVideoCanvas ? (
     <GridLayout
       className="layout"
       layout={isReadOnly ? staticLayout : canvasLayout}
@@ -59,5 +61,7 @@ export function VideoCanvas({
         />
       </div>
     </GridLayout>
-  );
+  ) : null;
+
+  return renderVideo;
 }
