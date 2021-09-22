@@ -27,6 +27,7 @@ import Menu from "./menu/common";
 import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
 import { SizeMe } from 'react-sizeme'
 import FormDialog from "./modal/form";
+import VideoFormDialog from "./modal/form";
 import { PhotoCanvas } from "./canvas/photo";
 import { VideoCanvas } from "./canvas/video";
 
@@ -119,9 +120,7 @@ export default function PermanentDrawerLeft({
   let idCounter = 0;
   const defaultPhotoCanvasLayout = { i: "a", x: 0, y: 0, w: 4, h: 7 };
   const [photoImageSource,setPhotoImageSource] = useState("");
-  const [videoUrlSource] = useState(
-    "https://www.youtube.com/watch?v=ysz5S6PUM-U"
-  );
+  const [videoUrlSource,SetVideoUrlSource] = useState('');
   const [photoCanvasLayout, setPhotoCanvasLayout] = useState([
     defaultPhotoCanvasLayout,
   ]);
@@ -132,6 +131,16 @@ export default function PermanentDrawerLeft({
 
   const [showPhoto, setShowPhoto] = useState(false);
   const [showVideoCanvas, setShowVideoCanvas] = useState(false);
+  const [imgUrl,setImgUrl] = useState('');
+  const handleImgUrlChange = (value:string) => {
+    console.log(value)
+    setImgUrl(value)
+  }
+
+  const handleVideoUrlChange = (value:string) => {
+    console.log(value)
+    SetVideoUrlSource(value)
+  }
 
   const getId = () => {
     idCounter++;
@@ -190,13 +199,22 @@ export default function PermanentDrawerLeft({
  
 
   const [openFormDialog, setOpenFormDialog] = useState(false);
+  const [openVideoFormDialog, setOpenVideoFormDialog] = useState(false);
 
   const handleOpenFormDialog = () => {
     setAnchorEl(null);
     setOpenFormDialog(true);
   };
 
-  const handleUploadFromDebice = (e:any) => {
+  const handleVideoOpenFormDialog = () => {
+    setOpenVideoFormDialog(true);
+  };
+
+  const handleVideoCloseFormDialog = () => {
+    setOpenVideoFormDialog(false);
+  };
+
+  const handleUploadFromDevice = (e:any) => {
     setAnchorEl(null);
     e.preventDefault();
     fileInputRef.current.click();
@@ -232,9 +250,13 @@ export default function PermanentDrawerLeft({
     <div className={classes.root}>
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
-      <FormDialog open={openFormDialog} handleClose={handleCloseFormDialog}/>
+      <FormDialog title="Upload photo" type="image" handleSubmit={() => console.log(imgUrl)} open={openFormDialog} handleChange={handleImgUrlChange} handleClose={handleCloseFormDialog}/>
+      <VideoFormDialog title="Upload video" type="video" handleSubmit={() => {
+        setShowVideoCanvas(true);
+        handleVideoCloseFormDialog()
+      }}  open={openVideoFormDialog} handleChange={handleVideoUrlChange} handleClose={handleVideoCloseFormDialog}/>
         <Menu anchorEl={anchorEl} handleClose={handleClose}>
-          <MenuItem onClick={handleUploadFromDebice}>
+          <MenuItem onClick={handleUploadFromDevice}>
             <GetAppIcon />
             <p>Upload from computer</p>
           </MenuItem>
@@ -255,7 +277,7 @@ export default function PermanentDrawerLeft({
                 accept="image/*"
                 onChange={handleFileChange}
               />
-            <VideoCallIcon />
+            <VideoCallIcon onClick={handleVideoOpenFormDialog}/>
             <p onClick={handleOpenBackgroundModal}>Background</p>
           </div>
           <div className={classes.preview}>
