@@ -26,6 +26,8 @@ import LinkIcon from "@material-ui/icons/Link";
 import Menu from "./menu/common";
 import FormDialog from "./modal/form";
 import { PhotoCanvas } from "./canvas/photo";
+import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
+import { SizeMe } from 'react-sizeme'
 
 export type ContainerProp = {
   backgroundColor: string;
@@ -100,7 +102,7 @@ const useStyles = makeStyles((theme) => ({
     border: "1px solid",
     backgroundColor: ({ backgroundColor }: any) => backgroundColor,
     padding: theme.spacing(3, 10),
-    height: "80vh",
+    height: "90vh",
   },
   interactiveItems: {
     border: "1px solid grey",
@@ -133,18 +135,21 @@ export default function PermanentDrawerLeft({
     { i: getId(), x: 0, y: 1, w: 240, h: 2 },
     { i: getId(), x: 0, y: 2, w: 240, h: 2 },
   ]);
+  const initialLayouts = {
+    lg: [
+      { i: "1", x: 0, y: 0, w: 800, h: 1},
+    { i: "2", x: 0, y: 1, w: 800, h: 5 },
+    ]
+  };
 
-  const [mainLayout, setMainLayout] = useState([
-    { i: "1", x: 0, y: 0, w: 800, h: 3 },
-    { i: "2", x: 0, y: 1, w: 800, h: 20 },
-  ]);
+  const [mainLayout, setMainLayout] = useState(initialLayouts);
 
   const layOutChange = (layout: any) => {
     console.log("layout", layout);
     setLayout(layout);
   };
 
-  const mainLayOutChange = (layout: any) => {
+  const mainLayOutChange = (x:any,layout: any) => {
     console.log("layout", layout);
     setMainLayout(layout);
   };
@@ -291,21 +296,24 @@ export default function PermanentDrawerLeft({
       <main className={classes.content}>
         {/* <div className={classes.toolbar} /> */}
         <Paper className={classes.interacativeContent}>
-          <GridLayout
+        <SizeMe>{({ size }) => <div>
+        <ResponsiveGridLayout
             className="layout"
-            layout={mainLayout}
-            cols={12}
+            layouts={mainLayout}
+            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+           cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+            width={size.width?size.width:900}
             rowHeight={15}
-            width={900}
             preventCollision={false}
             isDraggable={true}
             isResizable={true}
-            onLayoutChange={(layout) => mainLayOutChange(layout)}
+            onLayoutChange={mainLayOutChange}
           >
             <div key='1' className={classes.interactiveItems}>
-                ghjhj
+                {size.height}
               </div>
               <div key='2' className={classes.interactiveItems}>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta repudiandae blanditiis aut voluptatem hic nostrum tempore consequuntur optio. Magnam repellat totam animi ullam odio similique ex tenetur corrupti incidunt quia.
               <div>
               <PhotoCanvas
               imageSource={photoImageSource}
@@ -316,7 +324,8 @@ export default function PermanentDrawerLeft({
             />
               </div>
               </div>
-          </GridLayout>
+          </ResponsiveGridLayout>
+          </div>}</SizeMe>
         </Paper>
       </main>
     </div>

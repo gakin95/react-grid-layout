@@ -42,7 +42,7 @@ export function PhotoCanvas({
       className="layout"
       layout={isReadOnly ? staticLayout : canvasLayout}
       cols={12}
-      rowHeight={200}
+      rowHeight={50}
       width={1350}
       isBounded
       onLayoutChange={onLayoutChange}
