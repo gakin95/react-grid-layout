@@ -4,10 +4,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Slide from "@material-ui/core/Slide";
-import { Button } from "@material-ui/core";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import Menu from "@material-ui/core/Menu";
 import Colors from '../colors'
+import Button  from "../button";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -68,17 +68,6 @@ const useStyles = makeStyles((theme) => ({
     border: "1px solid grey",
     backgroundColor: ({ bgColor }: any) => bgColor,
     cursor:'pointer'
-  },
-  button: {
-    color: "#fff",
-    backgroundColor: "#D0021B",
-    width: 46,
-    height: 46,
-    marginTop: 20,
-    textTransform: "none",
-    "&:hover": {
-      backgroundColor: "#D0021B",
-    },
   },
 }));
 
@@ -178,9 +167,7 @@ export default function BackgroundModal({
                   </div>
                 </div>
               </div>
-              <Button className={classes.button} onClick={handleClose}>
-                Done
-              </Button>
+              <Button title='Done' onClick={handleClose}/>
             </div>
           </div>
         </Slide>
