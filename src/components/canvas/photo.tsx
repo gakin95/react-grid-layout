@@ -55,4 +55,8 @@ export function PhotoCanvas({
   ) : null;
 
   return renderItem;
+};
+
+export const PhotoImage = ({imageSource}:any) => {
+  return <img alt="test img 1" src={imageSource} width="100%" height="100%" />
 }

@@ -28,14 +28,16 @@ import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
 import { SizeMe } from 'react-sizeme'
 import FormDialog from "./modal/form";
 import VideoFormDialog from "./modal/form";
-import { PhotoCanvas } from "./canvas/photo";
-import { VideoCanvas } from "./canvas/video";
+import { PhotoCanvas, PhotoImage } from "./canvas/photo";
+import { VideoCanvas, Video } from "./canvas/video";
 
 
 export type ContainerProp = {
   backgroundColor: string;
   handleOpenBackgroundModal: () => void;
 };
+
+
 
 const drawerWidth = 240;
 
@@ -156,8 +158,11 @@ export default function PermanentDrawerLeft({
   ]);
   const initialLayouts = {
     lg: [
-      { i: "1", x: 0, y: 0, w: 800, h: 1},
-    { i: "2", x: 0, y: 1, w: 800, h: 5 },
+      { i: "1", x: 0, y: 0, w: 8, h: 2},
+    { i: "2", x: 0, y: 1, w: 800, h: 2 },
+    { i: "3", x: 0, y: 2, w: 800, h: 2, },
+    { i: "4", x: 0, y: 2, w: 800, h: 2 },
+    { i: "5", x: 0, y: 2, w: 800, h: 2 },
     ]
   };
 
@@ -168,9 +173,9 @@ export default function PermanentDrawerLeft({
     setLayout(layout);
   };
 
-  const mainLayOutChange = (x:any,layout: any) => {
-    console.log("layout", layout);
-    setMainLayout(layout);
+  const mainLayOutChange = (currentLayout:any,layouts: any) => {
+    console.log("layouts", layouts);
+    setMainLayout(layouts);
   };
 
   const photoLayoutChange = (layout: any) => {
@@ -342,28 +347,19 @@ export default function PermanentDrawerLeft({
             onLayoutChange={mainLayOutChange}
           >
             <div key='1' className={classes.interactiveItems}>
-                {size.height}
+                <PhotoImage imageSource='https://media.istockphoto.com/photos/red-generic-sedan-car-isolated-on-white-background-3d-illustration-picture-id1189903200?k=20&m=1189903200&s=612x612&w=0&h=L2bus_XVwK5_yXI08X6RaprdFKF1U9YjpN_pVYPgS0o='/>
               </div>
-              <div key='2' className={classes.interactiveItems}>
+              <div key='2'>
+                <Video videoSource='https://www.youtube.com/watch?v=fXclkNPiiqU'/>
+              </div>
+              <div key={mainLayout['lg'][2].i} className={classes.interactiveItems}>
+                {mainLayout['lg'][2].i}
+              </div>
+              <div key='4' className={classes.interactiveItems}>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta repudiandae blanditiis aut voluptatem hic nostrum tempore consequuntur optio. Magnam repellat totam animi ullam odio similique ex tenetur corrupti incidunt quia.
-              <div>
-              <PhotoCanvas
-              imageSource={photoImageSource}
-              isReadOnly={false}
-              canvasLayout={photoCanvasLayout}
-              updateLayout={setPhotoCanvasLayout}
-              showPhoto={showPhoto}
-            />
               </div>
-              <div>
-              <VideoCanvas
-              videoSource={videoUrlSource}
-              isReadOnly={false}
-              canvasLayout={videoCanvasLayout}
-              updateLayout={setVideoCanvasLayout}
-              showVideoCanvas={showVideoCanvas}
-            />
-              </div>
+              <div key='5' className={classes.interactiveItems}>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta repudiandae blanditiis aut voluptatem hic nostrum tempore consequuntur optio. Magnam repellat totam animi ullam odio similique ex tenetur corrupti incidunt quia.
               </div>
           </ResponsiveGridLayout>
           </div>}</SizeMe>
