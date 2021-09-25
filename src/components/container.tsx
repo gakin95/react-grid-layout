@@ -39,7 +39,7 @@ export type ContainerProp = {
 
 type LayoutProp = {
   lg: Layout[];
-}[]
+}[];
 
 const drawerWidth = 240;
 
@@ -135,34 +135,30 @@ export default function PermanentDrawerLeft({
     SetVideoUrlSource(value);
   };
 
-
   const getId = () => {
     idCounter++;
 
     return idCounter.toString();
   };
-  
+
   const fileInputRef = useRef<HTMLInputElement | any>(null);
   const [layout, setLayout] = useState([
     { i: getId(), x: 0, y: 0, w: 240, h: 2 },
   ]);
   const initialLayouts = [
     {
-      lg: [
-        { i: "1", x: 0, y: 2, w: 6, h: 4 },
-      ],
+      lg: [{ i: "1", x: 0, y: 2, w: 6, h: 4 }],
     },
-    
   ];
 
   const [mainLayout, setMainLayout] = useState(initialLayouts);
 
-  const [gridItems,setGridItem] = useState([
+  const [gridItems, setGridItem] = useState([
     [
       {
         id: 1,
         type: "text",
-        content: "text content",
+        content: "add text",
       },
     ],
   ]);
@@ -180,7 +176,6 @@ export default function PermanentDrawerLeft({
 
   console.log("mainLayout", mainLayout);
 
-
   const addNewItem = () => {
     const lists = [...layout];
     const length = lists.length + 1;
@@ -189,32 +184,44 @@ export default function PermanentDrawerLeft({
     setLayout((prev) => [...prev, { i: i, x: 0, y: length, w: 240, h: 2 }]);
   };
 
-  const addToCurrentGridItem = (type:string,content:string) => {
+  const addToCurrentGridItem = (type: string, content: string) => {
     const gridItemsLists = [...gridItems];
-   const curSlideList = gridItemsLists[index];
-   const newItemId = curSlideList.length + 1;
-   const mainSlideLayoutLists = [...mainLayout];
-   const defaultImageAndVideoLayout = { i: newItemId.toString(), x: 0, y: 0, w: 3, h: 2 };
-  const defaultTextLayout = { i: newItemId.toString(), x: 0, y: 2, w: 6, h: 4 };
-  const item = type === 'text'? defaultTextLayout : defaultImageAndVideoLayout;
-   const curSlideLayout = mainSlideLayoutLists[index]['lg'];
-   curSlideLayout.push(item)
-  setMainLayout(mainSlideLayoutLists);
-   curSlideList.push({
-    id: newItemId,
-    type: type,
-    content: content,
-  });
-   setGridItem(gridItemsLists)
+    const curSlideList = gridItemsLists[index];
+    const newItemId = curSlideList.length + 1;
+    const mainSlideLayoutLists = [...mainLayout];
+    const defaultImageAndVideoLayout = {
+      i: newItemId.toString(),
+      x: 0,
+      y: 0,
+      w: 3,
+      h: 2,
+    };
+    const defaultTextLayout = {
+      i: newItemId.toString(),
+      x: 0,
+      y: 2,
+      w: 6,
+      h: 4,
+    };
+    const item =
+      type === "text" ? defaultTextLayout : defaultImageAndVideoLayout;
+    const curSlideLayout = mainSlideLayoutLists[index]["lg"];
+    curSlideLayout.push(item);
+    setMainLayout(mainSlideLayoutLists);
+    curSlideList.push({
+      id: newItemId,
+      type: type,
+      content: content,
+    });
+    setGridItem(gridItemsLists);
   };
-
 
   const addText = () => {
     //addToCurrentSlideLayout('text');
-    addToCurrentGridItem('text','')
+    addToCurrentGridItem("text", "");
   };
 
-  console.log('gridItems',gridItems)
+  console.log("gridItems", gridItems);
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -258,17 +265,33 @@ export default function PermanentDrawerLeft({
       const reader = new FileReader();
       reader.onload = () => {
         const base64String = reader.result;
-        addToCurrentGridItem('photo',base64String as string)
+        addToCurrentGridItem("photo", base64String as string);
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleVideoSubmit = () => {
-    addToCurrentGridItem('video',videoUrlSource);
+    addToCurrentGridItem("video", videoUrlSource);
     handleVideoCloseFormDialog();
-  }
+  };
 
+  const renderItem = (type: string, content: string) => {
+    switch (type) {
+      case "photo":
+        return <PhotoImage imageSource={content} />;
+      case "video":
+        return <Video videoSource={content} />;
+      case "text":
+        return (
+          <TextContainer>
+            <div>{content}</div>
+          </TextContainer>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className={classes.root}>
@@ -305,7 +328,7 @@ export default function PermanentDrawerLeft({
         <div className={classes.header}>
           <div className={classes.actionBtn}>
             <CallMadeIcon />
-            <TextFieldsIcon onClick={addText}/>
+            <TextFieldsIcon onClick={addText} />
             <PhotoIcon onClick={handleClick} />
             <input
               type="file"
@@ -369,12 +392,12 @@ export default function PermanentDrawerLeft({
                     ) : item.type === "text" ? (
                       <TextContainer>
                         <div
-                        style={{
-                          color:'#000'
-                        }}
-                      >
-                        {item.content}
-                      </div>
+                          style={{
+                            color: "#000",
+                          }}
+                        >
+                          {item.content}
+                        </div>
                       </TextContainer>
                     ) : null}
                   </div>
@@ -403,15 +426,7 @@ export default function PermanentDrawerLeft({
                 >
                   {gridItems[index].map((item: any, i: number) => (
                     <div key={item.id} className={classes.interactiveItems}>
-                      {item.type === "photo" ? (
-                        <PhotoImage imageSource={item.content} />
-                      ) : item.type === "video" ? (
-                        <Video videoSource={item.content} />
-                      ) : (
-                        <TextContainer>
-                          <div>{item.content}</div>
-                        </TextContainer>
-                      )}
+                      {renderItem(item.type,item.content)}
                     </div>
                   ))}
                 </ResponsiveGridLayout>
