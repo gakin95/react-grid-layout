@@ -31,6 +31,7 @@ import VideoFormDialog from "./modal/form";
 import { PhotoImage } from "./canvasItems/photo";
 import { Video } from "./canvasItems/video";
 import { TextContainer } from "./canvasItems/text";
+import { ActionProp } from './model'
 
 export type ContainerProp = {
   backgroundColor: string;
@@ -157,7 +158,7 @@ export default function PermanentDrawerLeft({
     [
       {
         id: 1,
-        type: "text",
+        type: ActionProp.text,
         content: "add text",
       },
     ],
@@ -184,7 +185,7 @@ export default function PermanentDrawerLeft({
     setLayout((prev) => [...prev, { i: i, x: 0, y: length, w: 240, h: 2 }]);
   };
 
-  const addToCurrentGridItem = (type: string, content: string) => {
+  const addToCurrentGridItem = (type: ActionProp, content: string) => {
     const gridItemsLists = [...gridItems];
     const curSlideList = gridItemsLists[index];
     const newItemId = curSlideList.length + 1;
@@ -204,7 +205,7 @@ export default function PermanentDrawerLeft({
       h: 4,
     };
     const item =
-      type === "text" ? defaultTextLayout : defaultImageAndVideoLayout;
+      type === ActionProp.text ? defaultTextLayout : defaultImageAndVideoLayout;
     const curSlideLayout = mainSlideLayoutLists[index]["lg"];
     curSlideLayout.push(item);
     setMainLayout(mainSlideLayoutLists);
@@ -218,7 +219,7 @@ export default function PermanentDrawerLeft({
 
   const addText = () => {
     //addToCurrentSlideLayout('text');
-    addToCurrentGridItem("text", "");
+    addToCurrentGridItem(ActionProp.text, "");
   };
 
   console.log("gridItems", gridItems);
@@ -265,24 +266,24 @@ export default function PermanentDrawerLeft({
       const reader = new FileReader();
       reader.onload = () => {
         const base64String = reader.result;
-        addToCurrentGridItem("photo", base64String as string);
+        addToCurrentGridItem(ActionProp.photo, base64String as string);
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleVideoSubmit = () => {
-    addToCurrentGridItem("video", videoUrlSource);
+    addToCurrentGridItem(ActionProp.video, videoUrlSource);
     handleVideoCloseFormDialog();
   };
 
-  const renderItem = (type: string, content: string) => {
+  const renderItem = (type: ActionProp, content: string) => {
     switch (type) {
-      case "photo":
+      case ActionProp.photo:
         return <PhotoImage imageSource={content} />;
-      case "video":
+      case ActionProp.video:
         return <Video videoSource={content} />;
-      case "text":
+      case ActionProp.text:
         return (
           <TextContainer>
             <div>{content}</div>
@@ -381,15 +382,15 @@ export default function PermanentDrawerLeft({
               <div key={item.i} className={classes.subContent}>
                 {gridItems[index].map((item: any, i: number) => (
                   <div key={item.id}>
-                    {item.type === "photo" ? (
+                    {item.type === ActionProp.video ? (
                       <div style={{ width: "10vw", height: "10vh" }}>
                         <PhotoImage imageSource={item.content} />
                       </div>
-                    ) : item.type === "video" ? (
+                    ) : item.type === ActionProp.video ? (
                       <div style={{ width: "10vw", height: "10vh" }}>
                         <Video videoSource={item.content} />
                       </div>
-                    ) : item.type === "text" ? (
+                    ) : item.type === ActionProp.text ? (
                       <TextContainer>
                         <div
                           style={{
