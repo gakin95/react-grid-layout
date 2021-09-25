@@ -28,8 +28,9 @@ import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
 import { SizeMe } from "react-sizeme";
 import FormDialog from "./modal/form";
 import VideoFormDialog from "./modal/form";
-import { PhotoCanvas, PhotoImage } from "./canvas/photo";
-import { VideoCanvas, Video } from "./canvas/video";
+import { PhotoImage } from "./canvasItems/photo";
+import { Video } from "./canvasItems/video";
+import { TextContainer } from "./canvasItems/text";
 
 export type ContainerProp = {
   backgroundColor: string;
@@ -37,13 +38,7 @@ export type ContainerProp = {
 };
 
 type LayoutProp = {
-  lg: {
-      i: string;
-      x: number;
-      y: number;
-      w: number;
-      h: number;
-  }[];
+  lg: Layout[];
 }[]
 
 const drawerWidth = 240;
@@ -260,11 +255,9 @@ export default function PermanentDrawerLeft({
   const handleFileChange = (e: any) => {
     const file = e.target.files[0];
     if (file && file.type.substring(0, 5) === "image") {
-      //setImage(file);
       const reader = new FileReader();
       reader.onload = () => {
         const base64String = reader.result;
-        //addToCurrentSlideLayout('photo');
         addToCurrentGridItem('photo',base64String as string)
       };
       reader.readAsDataURL(file);
@@ -374,16 +367,15 @@ export default function PermanentDrawerLeft({
                         <Video videoSource={item.content} />
                       </div>
                     ) : item.type === "text" ? (
-                      <div
+                      <TextContainer>
+                        <div
                         style={{
-                          width: "10vw",
-                          height: "10vh",
-                          border: "1px  solid",
-                          backgroundColor:'red'
+                          color:'#000'
                         }}
                       >
                         {item.content}
                       </div>
+                      </TextContainer>
                     ) : null}
                   </div>
                 ))}
@@ -393,7 +385,6 @@ export default function PermanentDrawerLeft({
         </div>
       </Drawer>
       <main className={classes.content}>
-        {/* <div className={classes.toolbar} /> */}
         <Paper className={classes.interacativeContent}>
           <SizeMe>
             {({ size }) => (
@@ -417,7 +408,9 @@ export default function PermanentDrawerLeft({
                       ) : item.type === "video" ? (
                         <Video videoSource={item.content} />
                       ) : (
-                        <div>{item.content}</div>
+                        <TextContainer>
+                          <div>{item.content}</div>
+                        </TextContainer>
                       )}
                     </div>
                   ))}
