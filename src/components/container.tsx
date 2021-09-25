@@ -25,19 +25,26 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import LinkIcon from "@material-ui/icons/Link";
 import Menu from "./menu/common";
 import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
-import { SizeMe } from 'react-sizeme'
+import { SizeMe } from "react-sizeme";
 import FormDialog from "./modal/form";
 import VideoFormDialog from "./modal/form";
 import { PhotoCanvas, PhotoImage } from "./canvas/photo";
 import { VideoCanvas, Video } from "./canvas/video";
-
 
 export type ContainerProp = {
   backgroundColor: string;
   handleOpenBackgroundModal: () => void;
 };
 
-
+type LayoutProp = {
+  lg: {
+      i: string;
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+  }[];
+}[]
 
 const drawerWidth = 240;
 
@@ -120,9 +127,10 @@ export default function PermanentDrawerLeft({
 }: ContainerProp) {
   const classes = useStyles({ backgroundColor });
   let idCounter = 0;
+  const [index, setIndex] = useState(0);
   const defaultPhotoCanvasLayout = { i: "a", x: 0, y: 0, w: 4, h: 7 };
-  const [photoImageSource,setPhotoImageSource] = useState("");
-  const [videoUrlSource,SetVideoUrlSource] = useState('');
+  const [photoImageSource, setPhotoImageSource] = useState("");
+  const [videoUrlSource, SetVideoUrlSource] = useState("");
   const [photoCanvasLayout, setPhotoCanvasLayout] = useState([
     defaultPhotoCanvasLayout,
   ]);
@@ -133,56 +141,82 @@ export default function PermanentDrawerLeft({
 
   const [showPhoto, setShowPhoto] = useState(false);
   const [showVideoCanvas, setShowVideoCanvas] = useState(false);
-  const [imgUrl,setImgUrl] = useState('');
-  const handleImgUrlChange = (value:string) => {
-    console.log(value)
-    setImgUrl(value)
-  }
+  const [imgUrl, setImgUrl] = useState("");
+  const handleImgUrlChange = (value: string) => {
+    console.log(value);
+    setImgUrl(value);
+  };
 
-  const handleVideoUrlChange = (value:string) => {
-    console.log(value)
-    SetVideoUrlSource(value)
-  }
+  const handleVideoUrlChange = (value: string) => {
+    console.log(value);
+    SetVideoUrlSource(value);
+  };
 
   const getId = () => {
     idCounter++;
 
     return idCounter.toString();
   };
+  
   const fileInputRef = useRef<HTMLInputElement | any>(null);
   const [image, setImage] = useState(null);
   const [layout, setLayout] = useState([
     { i: getId(), x: 0, y: 0, w: 240, h: 2 },
-    { i: getId(), x: 0, y: 1, w: 240, h: 2 },
-    { i: getId(), x: 0, y: 2, w: 240, h: 2 },
   ]);
-  const initialLayouts = {
-    lg: [
-      { i: "1", x: 0, y: 0, w: 8, h: 2},
-    { i: "2", x: 0, y: 1, w: 800, h: 2 },
-    { i: "3", x: 0, y: 2, w: 800, h: 2, },
-    { i: "4", x: 0, y: 2, w: 800, h: 2 },
-    { i: "5", x: 0, y: 2, w: 800, h: 2 },
-    ]
-  };
+  const initialLayouts = [
+    {
+      lg: [
+        { i: "1", x: 0, y: 2, w: 6, h: 4 },
+      ],
+    },
+    
+  ];
 
   const [mainLayout, setMainLayout] = useState(initialLayouts);
+
+  const [gridItems,setGridItem] = useState([
+    [
+      // {
+      //   id: 1,
+      //   type: "photo",
+      //   content:
+      //     "https://media.istockphoto.com/photos/red-generic-sedan-car-isolated-on-white-background-3d-illustration-picture-id1189903200?k=20&m=1189903200&s=612x612&w=0&h=L2bus_XVwK5_yXI08X6RaprdFKF1U9YjpN_pVYPgS0o=",
+      // },
+      // {
+      //   id: 2,
+      //   type: "video",
+      //   content: "https://www.youtube.com/watch?v=fXclkNPiiqU",
+      // },
+      {
+        id: 1,
+        type: "text",
+        content: "text content",
+      },
+      // {
+      //   id: 4,
+      //   type: "text",
+      //   content: "text content",
+      // },
+    ],
+  ]);
 
   const layOutChange = (layout: any) => {
     console.log("layout", layout);
     setLayout(layout);
   };
 
-  const mainLayOutChange = (currentLayout:any,layouts: any) => {
+  const mainLayOutChange = (currentLayout: any, layouts: any) => {
     console.log("layouts", layouts);
-    setMainLayout(layouts);
+    console.log("currentLayout", currentLayout);
+    setMainLayout((prev) => [...prev, layouts]);
   };
+
+  console.log("mainLayout", mainLayout);
 
   const photoLayoutChange = (layout: any) => {
     console.log("layout", layout);
     setPhotoCanvasLayout(layout);
   };
-
 
   const addNewItem = () => {
     const lists = [...layout];
@@ -191,6 +225,38 @@ export default function PermanentDrawerLeft({
     console.log(length);
     setLayout((prev) => [...prev, { i: i, x: 0, y: length, w: 240, h: 2 }]);
   };
+
+  const addToCurrentGridItem = (type:string,content:string) => {
+    const gridItemsLists = [...gridItems];
+   const curSlideList = gridItemsLists[index];
+   const newItemId = curSlideList.length + 1;
+   curSlideList.push({
+    id: newItemId,
+    type: type,
+    content: content,
+  });
+   setGridItem(gridItemsLists)
+  };
+
+  const addToCurrentSlideLayout = (type:string) => {
+    const gridItemsLists = [...gridItems];
+   const curSlideList = gridItemsLists[index];
+   const newItemId = curSlideList.length + 1;
+   const mainSlideLayoutLists = [...mainLayout];
+   const defaultImageAndVideoLayout = { i: newItemId.toString(), x: 0, y: 0, w: 3, h: 2 };
+  const defaultTextLayout = { i: newItemId.toString(), x: 0, y: 2, w: 6, h: 4 };
+  const item = type === 'text'? defaultTextLayout : defaultImageAndVideoLayout;
+   const curSlideLayout = mainSlideLayoutLists[index]['lg'];
+   curSlideLayout.push(item)
+  setMainLayout(mainSlideLayoutLists);
+  }
+
+  const addText = () => {
+    addToCurrentSlideLayout('text');
+    addToCurrentGridItem('text','')
+  };
+
+  console.log('gridItems',gridItems)
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -201,7 +267,6 @@ export default function PermanentDrawerLeft({
   const handleClose = () => {
     setAnchorEl(null);
   };
- 
 
   const [openFormDialog, setOpenFormDialog] = useState(false);
   const [openVideoFormDialog, setOpenVideoFormDialog] = useState(false);
@@ -219,7 +284,7 @@ export default function PermanentDrawerLeft({
     setOpenVideoFormDialog(false);
   };
 
-  const handleUploadFromDevice = (e:any) => {
+  const handleUploadFromDevice = (e: any) => {
     setAnchorEl(null);
     e.preventDefault();
     fileInputRef.current.click();
@@ -229,7 +294,7 @@ export default function PermanentDrawerLeft({
     setOpenFormDialog(false);
   };
 
-  const handleFileChange = (e:any) => {
+  const handleFileChange = (e: any) => {
     const file = e.target.files[0];
     if (file && file.type.substring(0, 5) === "image") {
       setImage(file);
@@ -243,6 +308,8 @@ export default function PermanentDrawerLeft({
         const base64String = reader.result;
         setPhotoImageSource(base64String as string);
         setShowPhoto(true);
+        addToCurrentSlideLayout('photo');
+        addToCurrentGridItem('photo',base64String as string)
       };
       reader.readAsDataURL(image);
     } else {
@@ -255,11 +322,25 @@ export default function PermanentDrawerLeft({
     <div className={classes.root}>
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
-      <FormDialog title="Upload photo" type="image" handleSubmit={() => console.log(imgUrl)} open={openFormDialog} handleChange={handleImgUrlChange} handleClose={handleCloseFormDialog}/>
-      <VideoFormDialog title="Upload video" type="video" handleSubmit={() => {
-        setShowVideoCanvas(true);
-        handleVideoCloseFormDialog()
-      }}  open={openVideoFormDialog} handleChange={handleVideoUrlChange} handleClose={handleVideoCloseFormDialog}/>
+        <FormDialog
+          title="Upload photo"
+          type="image"
+          handleSubmit={() => console.log(imgUrl)}
+          open={openFormDialog}
+          handleChange={handleImgUrlChange}
+          handleClose={handleCloseFormDialog}
+        />
+        <VideoFormDialog
+          title="Upload video"
+          type="video"
+          handleSubmit={() => {
+            setShowVideoCanvas(true);
+            handleVideoCloseFormDialog();
+          }}
+          open={openVideoFormDialog}
+          handleChange={handleVideoUrlChange}
+          handleClose={handleVideoCloseFormDialog}
+        />
         <Menu anchorEl={anchorEl} handleClose={handleClose}>
           <MenuItem onClick={handleUploadFromDevice}>
             <GetAppIcon />
@@ -273,16 +354,16 @@ export default function PermanentDrawerLeft({
         <div className={classes.header}>
           <div className={classes.actionBtn}>
             <CallMadeIcon />
-            <TextFieldsIcon />
+            <TextFieldsIcon onClick={addText}/>
             <PhotoIcon onClick={handleClick} />
             <input
-                type="file"
-                ref={fileInputRef}
-                style={{ display: "none" }}
-                accept="image/*"
-                onChange={handleFileChange}
-              />
-            <VideoCallIcon onClick={handleVideoOpenFormDialog}/>
+              type="file"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+            <VideoCallIcon onClick={handleVideoOpenFormDialog} />
             <p onClick={handleOpenBackgroundModal}>Background</p>
           </div>
           <div className={classes.preview}>
@@ -324,7 +405,30 @@ export default function PermanentDrawerLeft({
           >
             {layout.map((item, i) => (
               <div key={item.i} className={classes.subContent}>
-                {item.i}
+                {gridItems[index].map((item: any, i: number) => (
+                  <div key={item.id}>
+                    {item.type === "photo" ? (
+                      <div style={{ width: "10vw", height: "10vh" }}>
+                        <PhotoImage imageSource={item.content} />
+                      </div>
+                    ) : item.type === "video" ? (
+                      <div style={{ width: "10vw", height: "10vh" }}>
+                        <Video videoSource={item.content} />
+                      </div>
+                    ) : item.type === "text" ? (
+                      <div
+                        style={{
+                          width: "10vw",
+                          height: "10vh",
+                          border: "1px  solid",
+                          backgroundColor:'red'
+                        }}
+                      >
+                        {item.content}
+                      </div>
+                    ) : null}
+                  </div>
+                ))}
               </div>
             ))}
           </GridLayout>
@@ -333,36 +437,36 @@ export default function PermanentDrawerLeft({
       <main className={classes.content}>
         {/* <div className={classes.toolbar} /> */}
         <Paper className={classes.interacativeContent}>
-        <SizeMe>{({ size }) => <div>
-        <ResponsiveGridLayout
-            className="layout"
-            layouts={mainLayout}
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-           cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-            width={size.width?size.width:900}
-            rowHeight={100}
-            preventCollision={false}
-            isDraggable={true}
-            isResizable={true}
-            onLayoutChange={mainLayOutChange}
-          >
-            <div key='1' className={classes.interactiveItems}>
-                <PhotoImage imageSource='https://media.istockphoto.com/photos/red-generic-sedan-car-isolated-on-white-background-3d-illustration-picture-id1189903200?k=20&m=1189903200&s=612x612&w=0&h=L2bus_XVwK5_yXI08X6RaprdFKF1U9YjpN_pVYPgS0o='/>
+          <SizeMe>
+            {({ size }) => (
+              <div>
+                <ResponsiveGridLayout
+                  className="layout"
+                  layouts={mainLayout[index]}
+                  breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                  cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+                  width={size.width ? size.width : 900}
+                  rowHeight={100}
+                  preventCollision={false}
+                  isDraggable={true}
+                  isResizable={true}
+                  onLayoutChange={mainLayOutChange}
+                >
+                  {gridItems[index].map((item: any, i: number) => (
+                    <div key={item.id} className={classes.interactiveItems}>
+                      {item.type === "photo" ? (
+                        <PhotoImage imageSource={item.content} />
+                      ) : item.type === "video" ? (
+                        <Video videoSource={item.content} />
+                      ) : (
+                        <div>{item.content}</div>
+                      )}
+                    </div>
+                  ))}
+                </ResponsiveGridLayout>
               </div>
-              <div key='2'>
-                <Video videoSource='https://www.youtube.com/watch?v=fXclkNPiiqU'/>
-              </div>
-              <div key={mainLayout['lg'][2].i} className={classes.interactiveItems}>
-                {mainLayout['lg'][2].i}
-              </div>
-              <div key='4' className={classes.interactiveItems}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta repudiandae blanditiis aut voluptatem hic nostrum tempore consequuntur optio. Magnam repellat totam animi ullam odio similique ex tenetur corrupti incidunt quia.
-              </div>
-              <div key='5' className={classes.interactiveItems}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta repudiandae blanditiis aut voluptatem hic nostrum tempore consequuntur optio. Magnam repellat totam animi ullam odio similique ex tenetur corrupti incidunt quia.
-              </div>
-          </ResponsiveGridLayout>
-          </div>}</SizeMe>
+            )}
+          </SizeMe>
         </Paper>
       </main>
     </div>

@@ -68,7 +68,7 @@ export function VideoCanvas({
 
 export const Video = ({videoSource}:any) => {
   return <div
-  style={{ backgroundColor: "gray", flex: 1, justifyContent: "center" }}
+  style={{ backgroundColor: "gray", flex: 1, width:'100%', height:'100%'}}
 >
   <ReactPlayer
     width="100%"
