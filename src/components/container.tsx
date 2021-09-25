@@ -128,19 +128,7 @@ export default function PermanentDrawerLeft({
   const classes = useStyles({ backgroundColor });
   let idCounter = 0;
   const [index, setIndex] = useState(0);
-  const defaultPhotoCanvasLayout = { i: "a", x: 0, y: 0, w: 4, h: 7 };
-  const [photoImageSource, setPhotoImageSource] = useState("");
   const [videoUrlSource, SetVideoUrlSource] = useState("");
-  const [photoCanvasLayout, setPhotoCanvasLayout] = useState([
-    defaultPhotoCanvasLayout,
-  ]);
-
-  const [videoCanvasLayout, setVideoCanvasLayout] = useState([
-    defaultPhotoCanvasLayout,
-  ]);
-
-  const [showPhoto, setShowPhoto] = useState(false);
-  const [showVideoCanvas, setShowVideoCanvas] = useState(false);
   const [imgUrl, setImgUrl] = useState("");
   const handleImgUrlChange = (value: string) => {
     console.log(value);
@@ -152,6 +140,7 @@ export default function PermanentDrawerLeft({
     SetVideoUrlSource(value);
   };
 
+
   const getId = () => {
     idCounter++;
 
@@ -159,7 +148,6 @@ export default function PermanentDrawerLeft({
   };
   
   const fileInputRef = useRef<HTMLInputElement | any>(null);
-  const [image, setImage] = useState(null);
   const [layout, setLayout] = useState([
     { i: getId(), x: 0, y: 0, w: 240, h: 2 },
   ]);
@@ -176,27 +164,11 @@ export default function PermanentDrawerLeft({
 
   const [gridItems,setGridItem] = useState([
     [
-      // {
-      //   id: 1,
-      //   type: "photo",
-      //   content:
-      //     "https://media.istockphoto.com/photos/red-generic-sedan-car-isolated-on-white-background-3d-illustration-picture-id1189903200?k=20&m=1189903200&s=612x612&w=0&h=L2bus_XVwK5_yXI08X6RaprdFKF1U9YjpN_pVYPgS0o=",
-      // },
-      // {
-      //   id: 2,
-      //   type: "video",
-      //   content: "https://www.youtube.com/watch?v=fXclkNPiiqU",
-      // },
       {
         id: 1,
         type: "text",
         content: "text content",
       },
-      // {
-      //   id: 4,
-      //   type: "text",
-      //   content: "text content",
-      // },
     ],
   ]);
 
@@ -213,10 +185,6 @@ export default function PermanentDrawerLeft({
 
   console.log("mainLayout", mainLayout);
 
-  const photoLayoutChange = (layout: any) => {
-    console.log("layout", layout);
-    setPhotoCanvasLayout(layout);
-  };
 
   const addNewItem = () => {
     const lists = [...layout];
@@ -230,6 +198,13 @@ export default function PermanentDrawerLeft({
     const gridItemsLists = [...gridItems];
    const curSlideList = gridItemsLists[index];
    const newItemId = curSlideList.length + 1;
+   const mainSlideLayoutLists = [...mainLayout];
+   const defaultImageAndVideoLayout = { i: newItemId.toString(), x: 0, y: 0, w: 3, h: 2 };
+  const defaultTextLayout = { i: newItemId.toString(), x: 0, y: 2, w: 6, h: 4 };
+  const item = type === 'text'? defaultTextLayout : defaultImageAndVideoLayout;
+   const curSlideLayout = mainSlideLayoutLists[index]['lg'];
+   curSlideLayout.push(item)
+  setMainLayout(mainSlideLayoutLists);
    curSlideList.push({
     id: newItemId,
     type: type,
@@ -238,21 +213,9 @@ export default function PermanentDrawerLeft({
    setGridItem(gridItemsLists)
   };
 
-  const addToCurrentSlideLayout = (type:string) => {
-    const gridItemsLists = [...gridItems];
-   const curSlideList = gridItemsLists[index];
-   const newItemId = curSlideList.length + 1;
-   const mainSlideLayoutLists = [...mainLayout];
-   const defaultImageAndVideoLayout = { i: newItemId.toString(), x: 0, y: 0, w: 3, h: 2 };
-  const defaultTextLayout = { i: newItemId.toString(), x: 0, y: 2, w: 6, h: 4 };
-  const item = type === 'text'? defaultTextLayout : defaultImageAndVideoLayout;
-   const curSlideLayout = mainSlideLayoutLists[index]['lg'];
-   curSlideLayout.push(item)
-  setMainLayout(mainSlideLayoutLists);
-  }
 
   const addText = () => {
-    addToCurrentSlideLayout('text');
+    //addToCurrentSlideLayout('text');
     addToCurrentGridItem('text','')
   };
 
@@ -297,26 +260,22 @@ export default function PermanentDrawerLeft({
   const handleFileChange = (e: any) => {
     const file = e.target.files[0];
     if (file && file.type.substring(0, 5) === "image") {
-      setImage(file);
-    }
-  };
-
-  useEffect(() => {
-    if (image) {
+      //setImage(file);
       const reader = new FileReader();
       reader.onload = () => {
         const base64String = reader.result;
-        setPhotoImageSource(base64String as string);
-        setShowPhoto(true);
-        addToCurrentSlideLayout('photo');
+        //addToCurrentSlideLayout('photo');
         addToCurrentGridItem('photo',base64String as string)
       };
-      reader.readAsDataURL(image);
-    } else {
-      setPhotoImageSource("");
-      setShowPhoto(false);
+      reader.readAsDataURL(file);
     }
-  }, [image]);
+  };
+
+  const handleVideoSubmit = () => {
+    addToCurrentGridItem('video',videoUrlSource);
+    handleVideoCloseFormDialog();
+  }
+
 
   return (
     <div className={classes.root}>
@@ -334,8 +293,7 @@ export default function PermanentDrawerLeft({
           title="Upload video"
           type="video"
           handleSubmit={() => {
-            setShowVideoCanvas(true);
-            handleVideoCloseFormDialog();
+            handleVideoSubmit();
           }}
           open={openVideoFormDialog}
           handleChange={handleVideoUrlChange}
