@@ -183,6 +183,7 @@ export default function PermanentDrawerLeft({
     const i = length.toString();
     console.log(length);
     setLayout((prev) => [...prev, { i: i, x: 0, y: length, w: 240, h: 2 }]);
+    addNewSlide()
   };
 
   const addToCurrentGridItem = (type: ActionProp, content: string) => {
@@ -218,9 +219,27 @@ export default function PermanentDrawerLeft({
   };
 
   const addText = () => {
-    //addToCurrentSlideLayout('text');
     addToCurrentGridItem(ActionProp.text, "");
   };
+
+  const addNewSlide = () => {
+    const gridItemsLists = [...gridItems];
+    const mainSlideLayoutLists = [...mainLayout];
+    gridItemsLists.push([
+      {
+        id: 1,
+        type: ActionProp.text,
+        content: "added new text",
+      },
+    ]);
+    mainSlideLayoutLists.push({
+      lg: [{ i: "1", x: 0, y: 2, w: 6, h: 4 }],
+    },);
+    console.log('newslide.....',gridItemsLists);
+    console.log('mainSlideLayoutLists.....',mainSlideLayoutLists);
+    setGridItem(gridItemsLists);
+    setIndex(prev => prev + 1)
+  }
 
   console.log("gridItems", gridItems);
 
@@ -379,8 +398,8 @@ export default function PermanentDrawerLeft({
             onLayoutChange={(layout) => layOutChange(layout)}
           >
             {layout.map((item, i) => (
-              <div key={item.i} className={classes.subContent}>
-                {gridItems[index].map((item: any, i: number) => (
+              <div key={item.i} className={classes.subContent} onClick={() => setIndex(i)}>
+                {gridItems[i].map((item: any, i: number) => (
                   <div key={item.id}>
                     {item.type === ActionProp.video ? (
                       <div style={{ width: "10vw", height: "10vh" }}>
@@ -396,6 +415,7 @@ export default function PermanentDrawerLeft({
                           style={{
                             color: "#000",
                           }}
+                          
                         >
                           {item.content}
                         </div>
