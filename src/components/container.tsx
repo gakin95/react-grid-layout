@@ -150,6 +150,9 @@ export default function PermanentDrawerLeft({
     {
       lg: [{ i: "1", x: 0, y: 2, w: 6, h: 4 }],
     },
+    {
+      lg: [{ i: "1", x: 0, y: 2, w: 6, h: 4 }],
+    },
   ];
 
   const [mainLayout, setMainLayout] = useState(initialLayouts);
@@ -172,7 +175,9 @@ export default function PermanentDrawerLeft({
   const mainLayOutChange = (currentLayout: any, layouts: any) => {
     console.log("layouts", layouts);
     console.log("currentLayout", currentLayout);
-    setMainLayout((prev) => [...prev, layouts]);
+    const mainSlideLayoutLists = [...mainLayout];
+    mainSlideLayoutLists[index] = layouts;
+    setMainLayout(mainSlideLayoutLists);
   };
 
   console.log("mainLayout", mainLayout);
@@ -225,6 +230,9 @@ export default function PermanentDrawerLeft({
   const addNewSlide = () => {
     const gridItemsLists = [...gridItems];
     const mainSlideLayoutLists = [...mainLayout];
+    const defaultLayout = {
+      lg: [{ i: "1", x: 0, y: 2, w: 6, h: 4 }],
+    };
     gridItemsLists.push([
       {
         id: 1,
@@ -232,16 +240,17 @@ export default function PermanentDrawerLeft({
         content: "added new text",
       },
     ]);
+    mainSlideLayoutLists[index + 1] = defaultLayout;
     mainSlideLayoutLists.push({
       lg: [{ i: "1", x: 0, y: 2, w: 6, h: 4 }],
-    },);
-    console.log('newslide.....',gridItemsLists);
-    console.log('mainSlideLayoutLists.....',mainSlideLayoutLists);
+    });
     setGridItem(gridItemsLists);
-    setIndex(prev => prev + 1)
+    setMainLayout(mainSlideLayoutLists);
+    setIndex(prev => prev + 1);
   }
 
   console.log("gridItems", gridItems);
+  console.log("index", index);
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -401,7 +410,7 @@ export default function PermanentDrawerLeft({
               <div key={item.i} className={classes.subContent} onClick={() => setIndex(i)}>
                 {gridItems[i].map((item: any, i: number) => (
                   <div key={item.id}>
-                    {item.type === ActionProp.video ? (
+                    {item.type === ActionProp.photo ? (
                       <div style={{ width: "10vw", height: "10vh" }}>
                         <PhotoImage imageSource={item.content} />
                       </div>
