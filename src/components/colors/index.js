@@ -1,3 +1,5 @@
+import Gradient from "javascript-color-gradient";
+
 const CSS_COLOR_NAMES = [
     "AliceBlue",
     "AntiqueWhite",
@@ -149,4 +151,22 @@ const CSS_COLOR_NAMES = [
     "YellowGreen",
   ];
 
-  export default CSS_COLOR_NAMES
+  const colorGradient = new Gradient();
+  const secondGradient = new Gradient();
+  const thirdGradient = new Gradient();
+
+  colorGradient.setGradient("#3F2CAF", "e9446a");
+  secondGradient.setGradient("edc988", "607D8B");
+  thirdGradient.setGradient("#FF0000", "#FFFF00");
+
+  secondGradient.setMidpoint(15);
+
+  const ColorArr = colorGradient.getArray();
+  const SecondColorArr = secondGradient.getArray();
+  const thirdColorArr = thirdGradient.getArray();
+
+  const ColorGradients = [...ColorArr,...SecondColorArr,...thirdColorArr,...CSS_COLOR_NAMES]
+
+  console.log('colorArr',ColorArr)
+
+  export default ColorGradients

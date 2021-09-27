@@ -1,13 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
-import Backdrop from "@material-ui/core/Backdrop";
-import Slide from "@material-ui/core/Slide";
+import { Grid,Modal,Backdrop, Menu, Slide, Container} from '@material-ui/core';
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import Menu from "@material-ui/core/Menu";
-import Colors from '../colors'
-import Button  from "../button";
+import Colors from "../colors";
+import Button from "../button";
+import { ChromePicker } from "react-color";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -54,39 +52,47 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: ({ backgroundColor }: any) => backgroundColor,
     border: "1px solid grey",
   },
-  colorsContainer:{
-    width:'250px',
-    padding:'10px',
-    display:'flex',
-    alignItems:'center',
-    flexWrap:'wrap'
+  colorsContainer: {
+    width: "250px",
+    padding: "10px",
+    display: "flex",
+    alignItems: "center",
+    flexWrap: "wrap",
   },
-  colors:{
+  colors: {
     width: "20px",
     height: "20px",
     borderRadius: "50%",
-    border: "1px solid grey",
+    //border: "1px solid grey",
     backgroundColor: ({ bgColor }: any) => bgColor,
+    cursor: "pointer",
+  },
+  colorTypeContainer:{
     cursor:'pointer'
   },
+  colorType:{
+    borderBottom:`5px solid`
+  }
 }));
 
 export type BackgroundModalProp = {
   open: boolean;
   backgroundColor: string;
-  handleBackgroundChange:(color:string) => void,
+  handleBackgroundChange: (color: string) => void;
   onClose: () => void;
 };
+
+type colorType = 'solid' | 'gradient'
 
 export type BgColor = {
   bgColor: string;
   addBackgroundColor: () => void;
 };
 
-export const Color = ({bgColor,addBackgroundColor}:BgColor) => {
+export const Color = ({ bgColor, addBackgroundColor }: BgColor) => {
   const classes = useStyles({ bgColor });
-  return <div className={classes.colors} onClick={addBackgroundColor}/>
-}
+  return <div className={classes.colors} onClick={addBackgroundColor} />;
+};
 export default function BackgroundModal({
   open,
   backgroundColor,
@@ -94,6 +100,7 @@ export default function BackgroundModal({
   onClose,
 }: BackgroundModalProp) {
   const classes = useStyles({ backgroundColor });
+  const [colorType, setColorType] = useState<colorType>('solid')
   const handleClose = () => {
     console.log("got here");
     onClose();
@@ -108,6 +115,19 @@ export default function BackgroundModal({
   const handleClosed = () => {
     setAnchorEl(null);
   };
+
+  const showListsOfColors = () => {
+    if (colorType === 'gradient') return <ChromePicker color={backgroundColor} onChange={(color:any,event:React.ChangeEvent<HTMLInputElement>) => handleBackgroundChange(color.hex)}/>;
+    return Colors.map((item: string) => (
+      <Color
+        bgColor={item}
+        key={item}
+        addBackgroundColor={() =>
+          handleBackgroundChange(item)
+        }
+      />
+    ))
+  }
 
   return (
     <div>
@@ -148,8 +168,20 @@ export default function BackgroundModal({
                       open={Boolean(anchorEl)}
                       onClose={handleClosed}
                     >
+                      <Grid container spacing={1}>
+                         <Grid className={classes.colorTypeContainer} item xs={6} onClick={() => setColorType('solid')}>
+                           <Container>
+                           <h5 className={colorType === 'solid' ? classes.colorType : ''}>Solid</h5>
+                           </Container>
+                         </Grid>
+                         <Grid className={classes.colorTypeContainer} item xs={6} onClick={() => setColorType('gradient')}>
+                         <Container>
+                           <h5 className={colorType === 'gradient' ? classes.colorType : ''}>Gradient</h5>
+                           </Container>
+                         </Grid>
+                      </Grid>
                       <div className={classes.colorsContainer}>
-                        {Colors.map(item => <Color bgColor={item} key={item} addBackgroundColor={() => handleBackgroundChange(item)}/>)}
+                      {showListsOfColors()}
                       </div>
                     </Menu>
                   </div>
@@ -167,7 +199,7 @@ export default function BackgroundModal({
                   </div>
                 </div>
               </div>
-              <Button title='Done' onClick={handleClose}/>
+              <Button title="Done" onClick={handleClose} />
             </div>
           </div>
         </Slide>
