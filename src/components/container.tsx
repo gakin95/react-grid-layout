@@ -28,10 +28,11 @@ import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
 import { SizeMe } from "react-sizeme";
 import FormDialog from "./modal/form";
 import VideoFormDialog from "./modal/form";
-import { PhotoImage } from "./canvasItems/photo";
-import { Video } from "./canvasItems/video";
-import { TextContainer } from "./canvasItems/text";
-import { ActionProp } from './model'
+import { PhotoImage } from "./slideItems/photo";
+import { Video } from "./slideItems/video";
+import { TextContainer } from "./slideItems/text";
+import { ActionProp } from "./model";
+import SlideNavigation, { drawerWidth } from "./slideItems/slideNavigation";
 
 export type ContainerProp = {
   backgroundColor: string;
@@ -41,8 +42,6 @@ export type ContainerProp = {
 type LayoutProp = {
   lg: Layout[];
 }[];
-
-const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,16 +55,17 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   appBar: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
+    //width: `calc(100% - ${drawerWidth}px)`,
+    //marginLeft: drawerWidth,
+    //marginBottom:200
   },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: drawerWidth,
-  },
+  // drawer: {
+  //   width: drawerWidth,
+  //   flexShrink: 0,
+  // },
+  // drawerPaper: {
+  //   width: drawerWidth,
+  // },
   // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
   leftIcons: {
@@ -101,11 +101,11 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3, 10),
     marginTop: "50px",
   },
-  subContent: {
-    border: "1px solid black",
-    backgroundColor: ({ backgroundColor }: any) => backgroundColor,
-    color: "white",
-  },
+  // subContent: {
+  //   border: "1px solid black",
+  //   backgroundColor: ({ backgroundColor }: any) => backgroundColor,
+  //   color: "white",
+  // },
   interacativeContent: {
     border: "1px solid",
     backgroundColor: ({ backgroundColor }: any) => backgroundColor,
@@ -150,9 +150,6 @@ export default function PermanentDrawerLeft({
     {
       lg: [{ i: "1", x: 0, y: 2, w: 6, h: 4 }],
     },
-    {
-      lg: [{ i: "1", x: 0, y: 2, w: 6, h: 4 }],
-    },
   ];
 
   const [mainLayout, setMainLayout] = useState(initialLayouts);
@@ -188,7 +185,7 @@ export default function PermanentDrawerLeft({
     const i = length.toString();
     console.log(length);
     setLayout((prev) => [...prev, { i: i, x: 0, y: length, w: 240, h: 2 }]);
-    addNewSlide()
+    addNewSlide();
   };
 
   const addToCurrentGridItem = (type: ActionProp, content: string) => {
@@ -246,8 +243,8 @@ export default function PermanentDrawerLeft({
     });
     setGridItem(gridItemsLists);
     setMainLayout(mainSlideLayoutLists);
-    setIndex(prev => prev + 1);
-  }
+    setIndex((prev) => prev + 1);
+  };
 
   console.log("gridItems", gridItems);
   console.log("index", index);
@@ -322,6 +319,10 @@ export default function PermanentDrawerLeft({
     }
   };
 
+  const handleSubItemClick = (value: number) => {
+    setIndex(value);
+  };
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -356,6 +357,7 @@ export default function PermanentDrawerLeft({
         </Menu>
         <div className={classes.header}>
           <div className={classes.actionBtn}>
+            <AddIcon onClick={addNewItem} />
             <CallMadeIcon />
             <TextFieldsIcon onClick={addText} />
             <PhotoIcon onClick={handleClick} />
@@ -375,68 +377,15 @@ export default function PermanentDrawerLeft({
           </div>
         </div>
       </AppBar>
-      <Drawer
-        className={classes.drawer}
-        variant="permanent"
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-        anchor="left"
-      >
-        {/* <div className={classes.toolbar} /> */}
-        <div className={classes.leftIcons}>
-          <AddIcon onClick={addNewItem} />
-          <ArrowDropDownIcon />
-          <UndoIcon />
-          <RedoIcon />
-          <PrintIcon />
-          <FormatPaintIcon />
-          <ZoomInIcon />
-        </div>
-        <Divider />
-        <div>
-          <GridLayout
-            className="layout"
-            layout={layout}
-            cols={12}
-            rowHeight={100}
-            width={240}
-            preventCollision={false}
-            isDraggable={true}
-            isResizable={true}
-            onLayoutChange={(layout) => layOutChange(layout)}
-          >
-            {layout.map((item, i) => (
-              <div key={item.i} className={classes.subContent} onClick={() => setIndex(i)}>
-                {gridItems[i].map((item: any, i: number) => (
-                  <div key={item.id}>
-                    {item.type === ActionProp.photo ? (
-                      <div style={{ width: "10vw", height: "10vh" }}>
-                        <PhotoImage imageSource={item.content} />
-                      </div>
-                    ) : item.type === ActionProp.video ? (
-                      <div style={{ width: "10vw", height: "10vh" }}>
-                        <Video videoSource={item.content} />
-                      </div>
-                    ) : item.type === ActionProp.text ? (
-                      <TextContainer>
-                        <div
-                          style={{
-                            color: "#000",
-                          }}
-                          
-                        >
-                          {item.content}
-                        </div>
-                      </TextContainer>
-                    ) : null}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </GridLayout>
-        </div>
-      </Drawer>
+      <div>
+        <SlideNavigation
+          backgroundColor={backgroundColor}
+          layout={layout}
+          gridItems={gridItems}
+          onLayoutChange={layOutChange}
+          handleClick={handleSubItemClick}
+        />
+      </div>
       <main className={classes.content}>
         <Paper className={classes.interacativeContent}>
           <SizeMe>
@@ -456,7 +405,7 @@ export default function PermanentDrawerLeft({
                 >
                   {gridItems[index].map((item: any, i: number) => (
                     <div key={item.id} className={classes.interactiveItems}>
-                      {renderItem(item.type,item.content)}
+                      {renderItem(item.type, item.content)}
                     </div>
                   ))}
                 </ResponsiveGridLayout>

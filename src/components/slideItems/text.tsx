@@ -1,5 +1,3 @@
-import { JsxElement } from "typescript"
-
 type textBoxProp = {
     children:React.ReactNode
   }
