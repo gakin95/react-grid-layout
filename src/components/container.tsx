@@ -1,14 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
 import { Paper } from "@material-ui/core";
-import Divider from "@material-ui/core/Divider";
 import GridLayout, { Layout } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import AddIcon from "@material-ui/icons/Add";
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import CallMadeIcon from "@material-ui/icons/CallMade";
 import TextFieldsIcon from "@material-ui/icons/TextFields";
 import PhotoIcon from "@material-ui/icons/Photo";
@@ -154,6 +153,7 @@ export default function PermanentDrawerLeft({
         id: 1,
         type: ActionProp.text,
         content: "add text",
+        showIcon:false
       },
     ],
   ]);
@@ -210,6 +210,7 @@ export default function PermanentDrawerLeft({
       id: newItemId,
       type: type,
       content: content,
+      showIcon:false,
     });
     setGridItem(gridItemsLists);
   };
@@ -229,6 +230,7 @@ export default function PermanentDrawerLeft({
         id: 1,
         type: ActionProp.text,
         content: "added new text",
+        showIcon:false,
       },
     ]);
     mainSlideLayoutLists[index + 1] = defaultLayout;
@@ -296,10 +298,10 @@ export default function PermanentDrawerLeft({
     handleVideoCloseFormDialog();
   };
 
-  const renderItem = (type: ActionProp, content: string) => {
+  const renderItem = (type: ActionProp, content: string, index:number) => {
     switch (type) {
       case ActionProp.photo:
-        return <PhotoImage imageSource={content} />;
+        return <PhotoImage imageSource={content} readonly={false}/>;
       case ActionProp.video:
         return <Video videoSource={content} />;
       case ActionProp.text:
@@ -372,6 +374,9 @@ export default function PermanentDrawerLeft({
         </div>
       </AppBar>
       <div>
+      {/* <ContextMenu>
+          <HighlightOffIcon/>
+          </ContextMenu> */}
         <SlideNavigation
           backgroundColor={backgroundColor}
           layout={layout}
@@ -380,7 +385,7 @@ export default function PermanentDrawerLeft({
           handleClick={handleSubItemClick}
         />
       </div>
-      <main className={classes.content}>
+      <main className={classes.content} onClick={(e) => console.log('clicked',e.type)}  onContextMenu={(e:any) => console.log('ghjhgh',e.type)}>
         <Paper className={classes.interacativeContent}>
           <SizeMe>
             {({ size }) => (
@@ -399,7 +404,7 @@ export default function PermanentDrawerLeft({
                 >
                   {gridItems[index].map((item: any, i: number) => (
                     <div key={item.id} className={classes.interactiveItems}>
-                      {renderItem(item.type, item.content)}
+                      {renderItem(item.type, item.content, i)}
                     </div>
                   ))}
                 </ResponsiveGridLayout>

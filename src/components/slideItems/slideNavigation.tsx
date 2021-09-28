@@ -41,12 +41,12 @@ const SlideNavigation = ({
   handleClick,
 }: SlideNavigatorProp) => {
   const classes = useStyles({ backgroundColor });
-  const renderItem = (type: ActionProp, content: string) => {
+  const renderItem = (type: ActionProp, content: string, showIcon:boolean) => {
     switch (type) {
       case ActionProp.photo:
         return (
           <div style={{ width: "10vw", height: "10vh" }}>
-            <PhotoImage imageSource={content} />
+            <PhotoImage imageSource={content} readonly={true}/>
           </div>
         );
       case ActionProp.video:
@@ -100,7 +100,7 @@ const SlideNavigation = ({
                 onClick={() => handleClick(i)}
               >
                 {gridItems[i].map((item: any, i: number) => (
-                  <div key={item.id}>{renderItem(item.type, item.content)}</div>
+                  <div key={item.id}>{renderItem(item.type, item.content, item.showIcon)}</div>
                 ))}
               </div>
             ))}
