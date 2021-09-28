@@ -298,10 +298,21 @@ export default function PermanentDrawerLeft({
     handleVideoCloseFormDialog();
   };
 
+  const hadleDeleteItem = (itemIndex:number) => {
+    const gridItemsLists = [...gridItems];
+    const curSlideList = gridItemsLists[index];
+    const mainSlideLayoutLists = [...mainLayout];
+    const curSlideLayoutLists = mainSlideLayoutLists[index]['lg'];
+    curSlideLayoutLists.splice(itemIndex,1);
+    curSlideList.splice(itemIndex,1);
+    setGridItem(gridItemsLists);
+    setMainLayout(mainSlideLayoutLists);
+  }
+
   const renderItem = (type: ActionProp, content: string, index:number) => {
     switch (type) {
       case ActionProp.photo:
-        return <PhotoImage imageSource={content} readonly={false}/>;
+        return <PhotoImage imageSource={content} readonly={false} index={index} onDelete={hadleDeleteItem}/>;
       case ActionProp.video:
         return <Video videoSource={content} />;
       case ActionProp.text:

@@ -3,8 +3,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 type imageSourceProp = {
   imageSource?: string;
-  index?: number;
+  index: number;
   readonly: boolean;
+  onDelete?:(index:number) => void
 };
 
 const useStyles = makeStyles(() => ({
@@ -23,6 +24,7 @@ export const PhotoImage = ({
   imageSource,
   index,
   readonly,
+  onDelete
 }: imageSourceProp) => {
   const classes = useStyles({ imageSource });
   const [showIcon, setShowIcon] = useState(false);
@@ -33,13 +35,16 @@ export const PhotoImage = ({
       setShowIcon(true);
     }
   };
+  const handeleDelete = () => {
+     if (onDelete) onDelete(index)
+  }
   return (
     <div
       className={classes.root}
       onClick={handleDisplayIcon}
       onContextMenu={handleDisplayIcon}
     >
-      {showIcon && !readonly && <HighlightOffIcon color="error" />}
+      {showIcon && !readonly && <HighlightOffIcon onClick={handeleDelete} color="error" />}
     </div>
   );
 };
