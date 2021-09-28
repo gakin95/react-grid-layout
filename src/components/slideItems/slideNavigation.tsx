@@ -52,12 +52,12 @@ const SlideNavigation = ({
       case ActionProp.video:
         return (
           <div style={{ width: "10vw", height: "10vh" }}>
-            <Video videoSource={content} />
+            <Video videoSource={content} readonly={false} index={index}/>
           </div>
         );
       case ActionProp.text:
         return (
-          <TextContainer>
+          <TextContainer readonly={false} index={index}>
             <div
               style={{
                 color: "#000",

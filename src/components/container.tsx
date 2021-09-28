@@ -314,10 +314,10 @@ export default function PermanentDrawerLeft({
       case ActionProp.photo:
         return <PhotoImage imageSource={content} readonly={false} index={index} onDelete={hadleDeleteItem}/>;
       case ActionProp.video:
-        return <Video videoSource={content} />;
+        return <Video videoSource={content} readonly={false} index={index} onDelete={hadleDeleteItem}/>;
       case ActionProp.text:
         return (
-          <TextContainer>
+          <TextContainer readonly={false} index={index} onDelete={hadleDeleteItem}>
             <div>{content}</div>
           </TextContainer>
         );
