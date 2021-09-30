@@ -12,6 +12,8 @@ const useStyles = makeStyles(() => ({
   root: {
     display: "flex",
     justifyContent: "space-between",
+    width:'100%',
+    height:'100%'
   },
 }));
 

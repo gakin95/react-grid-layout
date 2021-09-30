@@ -16,6 +16,7 @@ import VisibilityIcon from "@material-ui/icons/Visibility";
 import MenuItem from "@material-ui/core/MenuItem";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import LinkIcon from "@material-ui/icons/Link";
+import { RichTextEditorModel } from '@syncfusion/ej2-react-richtexteditor';
 import Menu from "./menu/common";
 import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
 import { SizeMe } from "react-sizeme";
@@ -26,6 +27,8 @@ import { Video } from "./slideItems/video";
 import { TextContainer } from "./slideItems/text";
 import { ActionProp } from "./model";
 import SlideNavigation, { drawerWidth } from "./slideItems/slideNavigation";
+import  ContextMenu  from './menu/contextMenu';
+import RichTextEditorContainer from './slideItems/Editor'
 
 export type ContainerProp = {
   backgroundColor: string;
@@ -93,12 +96,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing(3, 10),
     marginTop: "50px",
+    //overflow:"hidden"
   },
-  // subContent: {
-  //   border: "1px solid black",
-  //   backgroundColor: ({ backgroundColor }: any) => backgroundColor,
-  //   color: "white",
-  // },
   interacativeContent: {
     border: "1px solid",
     backgroundColor: ({ backgroundColor }: any) => backgroundColor,
@@ -116,6 +115,8 @@ export default function PermanentDrawerLeft({
 }: ContainerProp) {
   const classes = useStyles({ backgroundColor });
   let idCounter = 0;
+  let rowHeight = 50;
+  const rteExplanationRef = useRef<RichTextEditorModel | null>(null);
   const [index, setIndex] = useState(0);
   const [videoUrlSource, SetVideoUrlSource] = useState("");
   const [imgUrl, setImgUrl] = useState("");
@@ -318,7 +319,7 @@ export default function PermanentDrawerLeft({
       case ActionProp.text:
         return (
           <TextContainer readonly={false} index={index} onDelete={hadleDeleteItem}>
-            <div>{content}</div>
+              <RichTextEditorContainer rowHeight={rowHeight}/>
           </TextContainer>
         );
       default:
@@ -385,15 +386,13 @@ export default function PermanentDrawerLeft({
         </div>
       </AppBar>
       <div>
-      {/* <ContextMenu>
-          <HighlightOffIcon/>
-          </ContextMenu> */}
         <SlideNavigation
           backgroundColor={backgroundColor}
           layout={layout}
           gridItems={gridItems}
           onLayoutChange={layOutChange}
           handleClick={handleSubItemClick}
+          readonly={false}
         />
       </div>
       <main className={classes.content} onClick={(e) => console.log('clicked',e.type)}  onContextMenu={(e:any) => console.log('ghjhgh',e.type)}>
@@ -407,7 +406,7 @@ export default function PermanentDrawerLeft({
                   breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
                   cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
                   width={size.width ? size.width : 900}
-                  rowHeight={100}
+                  rowHeight={rowHeight}
                   preventCollision={false}
                   isDraggable={true}
                   isResizable={true}
@@ -423,6 +422,9 @@ export default function PermanentDrawerLeft({
             )}
           </SizeMe>
         </Paper>
+        {/* <ContextMenu>
+          <HighlightOffIcon/>
+          </ContextMenu> */}
       </main>
     </div>
   );

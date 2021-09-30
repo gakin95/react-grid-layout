@@ -1,6 +1,8 @@
 import Drawer from "@material-ui/core/Drawer";
 import { makeStyles } from "@material-ui/core/styles";
 import GridLayout, { Layout } from "react-grid-layout";
+import DeleteIcon from "@material-ui/icons/Delete";
+import Fab from "@material-ui/core/Fab";
 
 import { PhotoImage } from "./photo";
 import { Video } from "./video";
@@ -13,6 +15,8 @@ export type SlideNavigatorProp = {
   gridItems: any;
   onLayoutChange?(layout: GridLayout.Layout[]): void;
   handleClick: (index: number) => void;
+  readonly:boolean,
+  onDelete?:(index:number) => void
 };
 
 export const drawerWidth = 240;
@@ -21,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
+    //position: 'relative',
   },
   drawerPaper: {
     width: drawerWidth,
@@ -30,6 +35,8 @@ const useStyles = makeStyles((theme) => ({
     border: "1px solid black",
     backgroundColor: ({ backgroundColor }: any) => backgroundColor,
     color: "white",
+    overflow: "hidden",
+    display: "flex",
   },
 }));
 
@@ -37,22 +44,23 @@ const SlideNavigation = ({
   backgroundColor,
   layout,
   gridItems,
+  readonly,
   onLayoutChange,
   handleClick,
 }: SlideNavigatorProp) => {
   const classes = useStyles({ backgroundColor });
-  const renderItem = (type: ActionProp, content: string, index:number) => {
+  const renderItem = (type: ActionProp, content: string, index: number) => {
     switch (type) {
       case ActionProp.photo:
         return (
           <div style={{ width: "10vw", height: "10vh" }}>
-            <PhotoImage imageSource={content} readonly={true} index={index}/>
+            <PhotoImage imageSource={content} readonly={true} index={index} />
           </div>
         );
       case ActionProp.video:
         return (
           <div style={{ width: "10vw", height: "10vh" }}>
-            <Video videoSource={content} readonly={false} index={index}/>
+            <Video videoSource={content} readonly={false} index={index} />
           </div>
         );
       case ActionProp.text:
@@ -90,7 +98,7 @@ const SlideNavigation = ({
             width={240}
             preventCollision={false}
             isDraggable={true}
-            isResizable={true}
+            isResizable={false}
             onLayoutChange={onLayoutChange}
           >
             {layout.map((item: any, i: number) => (
@@ -99,9 +107,16 @@ const SlideNavigation = ({
                 className={classes.subContent}
                 onClick={() => handleClick(i)}
               >
-                {gridItems[i].map((item: any, i: number) => (
-                  <div key={item.id}>{renderItem(item.type, item.content, i)}</div>
-                ))}
+                <div>
+                  {gridItems[i].map((item: any, i: number) => (
+                    <div key={item.id}>
+                      {renderItem(item.type, item.content, i)}
+                    </div>
+                  ))}
+                </div>
+                {/* {!readonly && <Fab color="primary" aria-label="delete">
+                  <DeleteIcon />
+                </Fab>} */}
               </div>
             ))}
           </GridLayout>
