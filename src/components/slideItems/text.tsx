@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import RichTextEditorContainer from "./Editor";
+
 type textBoxProp = {
   children: React.ReactNode;
   index: number;
@@ -12,8 +14,8 @@ const useStyles = makeStyles(() => ({
   root: {
     display: "flex",
     justifyContent: "space-between",
-    width:'100%',
-    height:'100%'
+    width: '100%',
+    height: '100%'
   },
 }));
 

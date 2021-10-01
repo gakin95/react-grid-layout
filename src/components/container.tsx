@@ -27,7 +27,7 @@ import { Video } from "./slideItems/video";
 import { TextContainer } from "./slideItems/text";
 import { ActionProp } from "./model";
 import SlideNavigation, { drawerWidth } from "./slideItems/slideNavigation";
-import  ContextMenu  from './menu/contextMenu';
+import ContextMenu from './menu/contextMenu';
 import RichTextEditorContainer from './slideItems/Editor'
 
 export type ContainerProp = {
@@ -154,7 +154,7 @@ export default function PermanentDrawerLeft({
         id: 1,
         type: ActionProp.text,
         content: "add text",
-        showIcon:false
+        showIcon: false
       },
     ],
   ]);
@@ -211,7 +211,7 @@ export default function PermanentDrawerLeft({
       id: newItemId,
       type: type,
       content: content,
-      showIcon:false,
+      showIcon: false,
     });
     setGridItem(gridItemsLists);
   };
@@ -231,7 +231,7 @@ export default function PermanentDrawerLeft({
         id: 1,
         type: ActionProp.text,
         content: "added new text",
-        showIcon:false,
+        showIcon: false,
       },
     ]);
     mainSlideLayoutLists[index + 1] = defaultLayout;
@@ -299,27 +299,27 @@ export default function PermanentDrawerLeft({
     handleVideoCloseFormDialog();
   };
 
-  const hadleDeleteItem = (itemIndex:number) => {
+  const hadleDeleteItem = (itemIndex: number) => {
     const gridItemsLists = [...gridItems];
     const curSlideList = gridItemsLists[index];
     const mainSlideLayoutLists = [...mainLayout];
     const curSlideLayoutLists = mainSlideLayoutLists[index]['lg'];
-    curSlideLayoutLists.splice(itemIndex,1);
-    curSlideList.splice(itemIndex,1);
+    curSlideLayoutLists.splice(itemIndex, 1);
+    curSlideList.splice(itemIndex, 1);
     setGridItem(gridItemsLists);
     setMainLayout(mainSlideLayoutLists);
   }
 
-  const renderItem = (type: ActionProp, content: string, index:number) => {
+  const renderItem = (type: ActionProp, content: string, index: number) => {
     switch (type) {
       case ActionProp.photo:
-        return <PhotoImage imageSource={content} readonly={false} index={index} onDelete={hadleDeleteItem}/>;
+        return <PhotoImage imageSource={content} readonly={false} index={index} onDelete={hadleDeleteItem} />;
       case ActionProp.video:
-        return <Video videoSource={content} readonly={false} index={index} onDelete={hadleDeleteItem}/>;
+        return <Video videoSource={content} readonly={false} index={index} onDelete={hadleDeleteItem} />;
       case ActionProp.text:
         return (
           <TextContainer readonly={false} index={index} onDelete={hadleDeleteItem}>
-              <RichTextEditorContainer rowHeight={rowHeight}/>
+            <RichTextEditorContainer rowHeight={rowHeight} />
           </TextContainer>
         );
       default:
@@ -395,7 +395,7 @@ export default function PermanentDrawerLeft({
           readonly={false}
         />
       </div>
-      <main className={classes.content} onClick={(e) => console.log('clicked',e.type)}  onContextMenu={(e:any) => console.log('ghjhgh',e.type)}>
+      <main className={classes.content} onClick={(e) => console.log('clicked', e.type)} onContextMenu={(e: any) => console.log('ghjhgh', e.type)}>
         <Paper className={classes.interacativeContent}>
           <SizeMe>
             {({ size }) => (
