@@ -141,12 +141,12 @@ export default function PermanentDrawerLeft({
     { i: getId(), x: 0, y: 0, w: 240, h: 2 },
   ]);
   const initialLayouts = [
-    {
-      lg: [{ i: "1", x: 0, y: 2, w: 6, h: 4 }],
-    },
+    [{ i: "1", x: 0, y: 2, w: 12, h: 6 }],
   ];
 
   const [mainLayout, setMainLayout] = useState(initialLayouts);
+
+  console.log('manlayout', mainLayout)
 
   const [gridItems, setGridItem] = useState([
     [
@@ -164,22 +164,21 @@ export default function PermanentDrawerLeft({
     setLayout(layout);
   };
 
-  const mainLayOutChange = (currentLayout: any, layouts: any) => {
+  const mainLayOutChange = (layouts: any) => {
     console.log("layouts", layouts);
-    console.log("currentLayout", currentLayout);
     const mainSlideLayoutLists = [...mainLayout];
     mainSlideLayoutLists[index] = layouts;
     setMainLayout(mainSlideLayoutLists);
   };
 
-  console.log("mainLayout", mainLayout);
+  console.log("mainLayout", mainLayout[index]);
 
   const addNewItem = () => {
     const lists = [...layout];
     const length = lists.length + 1;
     const i = length.toString();
     console.log(length);
-    setLayout((prev) => [...prev, { i: i, x: 0, y: length, w: 240, h: 2 }]);
+    setLayout((prev) => [...prev, { i: i, x: 0, y: length, w: 12, h: 2 }]);
     addNewSlide();
   };
 
@@ -192,27 +191,28 @@ export default function PermanentDrawerLeft({
       i: newItemId.toString(),
       x: 0,
       y: 0,
-      w: 3,
+      w: 12,
       h: 2,
     };
     const defaultTextLayout = {
       i: newItemId.toString(),
       x: 0,
       y: 2,
-      w: 6,
+      w: 12,
       h: 4,
     };
     const item =
       type === ActionProp.text ? defaultTextLayout : defaultImageAndVideoLayout;
-    const curSlideLayout = mainSlideLayoutLists[index]["lg"];
+    const curSlideLayout = mainSlideLayoutLists[index];
     curSlideLayout.push(item);
-    setMainLayout(mainSlideLayoutLists);
+    console.log('curSlideLayout', curSlideLayout)
     curSlideList.push({
       id: newItemId,
       type: type,
       content: content,
       showIcon: false,
     });
+    setMainLayout(mainSlideLayoutLists);
     setGridItem(gridItemsLists);
   };
 
@@ -223,9 +223,7 @@ export default function PermanentDrawerLeft({
   const addNewSlide = () => {
     const gridItemsLists = [...gridItems];
     const mainSlideLayoutLists = [...mainLayout];
-    const defaultLayout = {
-      lg: [{ i: "1", x: 0, y: 2, w: 6, h: 4 }],
-    };
+    const defaultLayout = [{ i: "1", x: 0, y: 2, w: 6, h: 4 }];
     gridItemsLists.push([
       {
         id: 1,
@@ -235,9 +233,6 @@ export default function PermanentDrawerLeft({
       },
     ]);
     mainSlideLayoutLists[index + 1] = defaultLayout;
-    mainSlideLayoutLists.push({
-      lg: [{ i: "1", x: 0, y: 2, w: 6, h: 4 }],
-    });
     setGridItem(gridItemsLists);
     setMainLayout(mainSlideLayoutLists);
     setIndex((prev) => prev + 1);
@@ -303,7 +298,7 @@ export default function PermanentDrawerLeft({
     const gridItemsLists = [...gridItems];
     const curSlideList = gridItemsLists[index];
     const mainSlideLayoutLists = [...mainLayout];
-    const curSlideLayoutLists = mainSlideLayoutLists[index]['lg'];
+    const curSlideLayoutLists = mainSlideLayoutLists[index];
     curSlideLayoutLists.splice(itemIndex, 1);
     curSlideList.splice(itemIndex, 1);
     setGridItem(gridItemsLists);
@@ -319,7 +314,7 @@ export default function PermanentDrawerLeft({
       case ActionProp.text:
         return (
           <TextContainer readonly={false} index={index} onDelete={hadleDeleteItem}>
-            <RichTextEditorContainer rowHeight={rowHeight} />
+            {content}
           </TextContainer>
         );
       default:
@@ -400,13 +395,12 @@ export default function PermanentDrawerLeft({
           <SizeMe>
             {({ size }) => (
               <div>
-                <ResponsiveGridLayout
+                <GridLayout
                   className="layout"
-                  layouts={mainLayout[index]}
-                  breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                  cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+                  layout={mainLayout[index]}
                   width={size.width ? size.width : 900}
                   rowHeight={rowHeight}
+                  cols={12}
                   preventCollision={false}
                   isDraggable={true}
                   isResizable={true}
@@ -415,9 +409,10 @@ export default function PermanentDrawerLeft({
                   {gridItems[index].map((item: any, i: number) => (
                     <div key={item.id} className={classes.interactiveItems}>
                       {renderItem(item.type, item.content, i)}
+                      <p>{size.height}</p>
                     </div>
                   ))}
-                </ResponsiveGridLayout>
+                </GridLayout>
               </div>
             )}
           </SizeMe>
