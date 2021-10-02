@@ -14,7 +14,7 @@ const Editor = ({ rowHeight }: { rowHeight: number }) => {
       'CreateLink', 'Image', '|', 'ClearFormat', 'Print',
       'SourceCode', 'FullScreen', '|', 'Undo', 'Redo']
   };
-  return (<RichTextEditorComponent height={200} width={600} toolbarSettings={toolbarSettings}>
+  return (<RichTextEditorComponent height={200} width={600} toolbarSettings={toolbarSettings} >
 
     <Inject services={[Toolbar, HtmlEditor]} />
   </RichTextEditorComponent>);

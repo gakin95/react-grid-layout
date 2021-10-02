@@ -165,20 +165,16 @@ export default function PermanentDrawerLeft({
   };
 
   const mainLayOutChange = (currentLayout: any, layouts: any) => {
-    console.log("layouts", layouts);
-    console.log("currentLayout", currentLayout);
     const mainSlideLayoutLists = [...mainLayout];
     mainSlideLayoutLists[index] = layouts;
     setMainLayout(mainSlideLayoutLists);
   };
 
-  console.log("mainLayout", mainLayout);
 
   const addNewItem = () => {
     const lists = [...layout];
     const length = lists.length + 1;
     const i = length.toString();
-    console.log(length);
     setLayout((prev) => [...prev, { i: i, x: 0, y: length, w: 240, h: 2 }]);
     addNewSlide();
   };
@@ -220,6 +216,9 @@ export default function PermanentDrawerLeft({
     addToCurrentGridItem(ActionProp.text, "");
   };
 
+  console.log('mainLayouts',mainLayout);
+  console.log('mainLayout[index]',mainLayout[index]);
+
   const addNewSlide = () => {
     const gridItemsLists = [...gridItems];
     const mainSlideLayoutLists = [...mainLayout];
@@ -243,8 +242,6 @@ export default function PermanentDrawerLeft({
     setIndex((prev) => prev + 1);
   };
 
-  console.log("gridItems", gridItems);
-  console.log("index", index);
 
   const [anchorEl, setAnchorEl] = useState(null);
 
