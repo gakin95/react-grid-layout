@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { Editor, EditorState } from "draft-js";
+import "draft-js/dist/Draft.css";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
@@ -28,7 +30,15 @@ import { TextContainer } from "./slideItems/text";
 import { ActionProp } from "./model";
 import SlideNavigation, { drawerWidth } from "./slideItems/slideNavigation";
 import ContextMenu from './menu/contextMenu';
-import RichTextEditorContainer from './slideItems/Editor'
+import RichTextEditor from './EditorComponents/MyEditor';
+
+//import "./MyEditor.sass";
+
+import InlineStylesButtons from "./EditorComponents/buttons/InlineStylesButtons";
+import StyleBlockButtons from "./EditorComponents/buttons/StyleBlockButtons.jsx";
+
+import MarkdownViewer from "./EditorComponents/MarkdownViewer.jsx";
+import FileSaverComponent from './EditorComponents/FileSaverComponent.jsx'
 
 export type ContainerProp = {
   backgroundColor: string;
@@ -116,7 +126,6 @@ export default function PermanentDrawerLeft({
   const classes = useStyles({ backgroundColor });
   let idCounter = 0;
   let rowHeight = 50;
-  const rteExplanationRef = useRef<RichTextEditorModel | null>(null);
   const [index, setIndex] = useState(0);
   const [videoUrlSource, SetVideoUrlSource] = useState("");
   const [imgUrl, setImgUrl] = useState("");
@@ -124,6 +133,10 @@ export default function PermanentDrawerLeft({
     console.log(value);
     setImgUrl(value);
   };
+
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty()
+  );
 
   const handleVideoUrlChange = (value: string) => {
     console.log(value);
@@ -305,6 +318,8 @@ export default function PermanentDrawerLeft({
     setMainLayout(mainSlideLayoutLists);
   }
 
+  
+
   const renderItem = (type: ActionProp, content: string, index: number) => {
     switch (type) {
       case ActionProp.photo:
@@ -314,7 +329,11 @@ export default function PermanentDrawerLeft({
       case ActionProp.text:
         return (
           <TextContainer readonly={false} index={index} onDelete={hadleDeleteItem}>
-            {content}
+             <Editor
+          editorState={editorState}
+          onChange={setEditorState}
+          placeholder="Click here to activate input"
+        />
           </TextContainer>
         );
       default:
@@ -373,6 +392,14 @@ export default function PermanentDrawerLeft({
             />
             <VideoCallIcon onClick={handleVideoOpenFormDialog} />
             <p onClick={handleOpenBackgroundModal}>Background</p>
+            <InlineStylesButtons
+          editorState={editorState}
+          setEditorState={setEditorState}
+        />
+        <StyleBlockButtons
+          editorState={editorState}
+          setEditorState={setEditorState}
+        />
           </div>
           <div className={classes.preview}>
             <p>Preview</p>
@@ -388,6 +415,7 @@ export default function PermanentDrawerLeft({
           onLayoutChange={layOutChange}
           handleClick={handleSubItemClick}
           readonly={false}
+          editorState={editorState}
         />
       </div>
       <main className={classes.content} onClick={(e) => console.log('clicked', e.type)} onContextMenu={(e: any) => console.log('ghjhgh', e.type)}>
@@ -402,7 +430,7 @@ export default function PermanentDrawerLeft({
                   rowHeight={rowHeight}
                   cols={12}
                   preventCollision={false}
-                  isDraggable={true}
+                  isDraggable={false}
                   isResizable={true}
                   onLayoutChange={mainLayOutChange}
                 >

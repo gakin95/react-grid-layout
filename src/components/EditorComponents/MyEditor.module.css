@@ -1,0 +1,48 @@
+
+.toolbar {
+  display: flex;
+  margin-left: 6px;
+}
+.toolbar input[type="button"] {
+  border: 1px solid #eee;
+  background-color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 2px;
+  margin-bottom: 2px;
+}
+
+.toolbar input[type="button"]:active {
+  transform: scale(.95);
+}
+
+.toolbar input[type="button"]:not(.active):hover {
+  background-color: #eee;
+}
+
+.toolbar input[type="button"].active {
+  background-color: turquoise;
+  border-color: transparent;
+}
+
+.draftEditorWrapper {
+  background-color: #303030;
+  color: white;
+  margin-top: 20px
+}
+.markdownViewer{
+  overflow-y: auto
+}
+.markdownViewer textarea {
+  padding: 0;
+  resize: none;
+  width: 500px;
+  height: 150px;
+  background-color: #303030;
+  color: white;
+  border: none;
+  border-top: solid 1px #9b9b9b;
+}
+#markdownViewer textarea :focus {
+  outline: none
+}

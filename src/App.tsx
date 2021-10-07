@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Container from "./components/container";
 import BackgroundModal from "./components/modal/bg";
-import Editor from './components/slideItems/Editor';
 import './App.css'
 
 const App = () => {

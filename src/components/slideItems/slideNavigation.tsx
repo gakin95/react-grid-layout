@@ -1,13 +1,12 @@
 import Drawer from "@material-ui/core/Drawer";
 import { makeStyles } from "@material-ui/core/styles";
 import GridLayout, { Layout } from "react-grid-layout";
-import DeleteIcon from "@material-ui/icons/Delete";
-import Fab from "@material-ui/core/Fab";
 
 import { PhotoImage } from "./photo";
 import { Video } from "./video";
 import { TextContainer } from "./text";
 import { ActionProp } from "../model";
+import MarkdownViewer from "../EditorComponents/MarkdownViewer";
 
 export type SlideNavigatorProp = {
   backgroundColor: string;
@@ -16,7 +15,8 @@ export type SlideNavigatorProp = {
   onLayoutChange?(layout: GridLayout.Layout[]): void;
   handleClick: (index: number) => void;
   readonly:boolean,
-  onDelete?:(index:number) => void
+  onDelete?:(index:number) => void,
+  editorState:any
 };
 
 export const drawerWidth = 240;
@@ -44,7 +44,7 @@ const SlideNavigation = ({
   backgroundColor,
   layout,
   gridItems,
-  readonly,
+  editorState,
   onLayoutChange,
   handleClick,
 }: SlideNavigatorProp) => {
@@ -71,7 +71,7 @@ const SlideNavigation = ({
                 color: "#000",
               }}
             >
-              {content}
+              <MarkdownViewer editorState={editorState} />
             </div>
           </TextContainer>
         );
